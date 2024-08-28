@@ -4,6 +4,7 @@ from .models import*
 
 class TaskAdmin(admin.ModelAdmin):
     list_display = ('title', 'list', 'deadline', 'order', 'is_starred', 'is_completed')
+    list_filter = ['list', 'is_starred', 'is_completed']
 
 admin.site.register(List)
 admin.site.register(Task, TaskAdmin)
