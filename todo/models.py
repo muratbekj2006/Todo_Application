@@ -19,7 +19,6 @@ class Task(models.Model):
         return self.title
 
     class Meta:
-        # Enforce that order is unique within each list
         constraints = [
             models.UniqueConstraint(fields=['list', 'order'], name='unique_task_order_within_list')
         ]
