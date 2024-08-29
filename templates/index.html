@@ -4,8 +4,11 @@
 
 <h1>Please select which list to view</h1>
 <ul>
+    <div>
+        <a href="">Create New List</a>
+    </div>
     {% for list in list_types %}
-    <li>{{ list }}</li>
+    <li><a href="{% url 'todolist' list.id %}">{{ list }}</a></li>
     {% endfor %}
 </ul>
 

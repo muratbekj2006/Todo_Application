@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<ul>
+    {% for task in task_list %}
+        <li>
+            <div>
+                <div><h2>{{task.title}}</h2></div>
+                <div>
+                    {{task.list}} || {{task.deadline}} || {{task.is_starred}} || {{task.is_completed}}
+                </div>
+            </div>
+        </li>
+    {% endfor %}
+</ul>
+
+{% endblock content %}
