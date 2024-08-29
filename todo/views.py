@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.views.generic import ListView
+from django.views.generic import ListView, DetailView
 # Create your views here.
 from .models import*
 
@@ -16,3 +16,7 @@ class TodoListView(ListView):
     def get_queryset(self):
         list_obj = List.objects.get(id=self.kwargs['list_id'])
         return Task.objects.filter(list=list_obj)
+
+class TaskDetailView(DetailView):
+    model = Task
+    template_name = 'task_detail.html'
