@@ -8,7 +8,7 @@
         <a href="">Create New List</a>
     </div>
     {% for list in list_types %}
-    <li><a href="{% url 'todolist' list.id %}">{{ list }}</a></li>
+        <li><a href="{% url 'todolist' list.id %}">{{ list }}</a></li>
     {% endfor %}
 </ul>
 

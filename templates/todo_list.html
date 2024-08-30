@@ -10,11 +10,13 @@
                     {{task.list}} || {{task.deadline}} || {{task.is_starred}} || {{task.is_completed}}
                 </div>
                 <div>
-                    <a href="">View...</a>
+                    <a href="{% url 'task_detail' task.list.id task.id %}">View...</a>
                 </div>
             </div>
         </li>
     {% endfor %}
+
+    <li><a href=""> + Create New Task</a></li>
 </ul>
 
 {% endblock content %}

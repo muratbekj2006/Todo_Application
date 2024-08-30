@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404
 from django.views.generic import ListView, DetailView
 # Create your views here.
 from .models import*
@@ -20,3 +20,10 @@ class TodoListView(ListView):
 class TaskDetailView(DetailView):
     model = Task
     template_name = 'task_detail.html'
+
+    def get_object(self):
+        list_id = self.kwargs['list_id']
+        task_id = self.kwargs['task_id']
+        return get_object_or_404(Task, id=task_id, list_id=list_id)
+
+    

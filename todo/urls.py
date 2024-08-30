@@ -3,4 +3,6 @@ from .views import*
 urlpatterns = [
     path('', HomePageView.as_view(), name='home'),
     path('todo-list/<int:list_id>/', TodoListView.as_view(), name='todolist'),
+    path('todo-list/<int:list_id>/<int:task_id>/', TaskDetailView.as_view(), name='task_detail'),
+
 ]
