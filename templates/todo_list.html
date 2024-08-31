@@ -5,7 +5,7 @@
     {% for task in task_list %}
         <li>
             <div>
-                <div><h2>{{task.title}}</h2></div>
+                <div><h2>{{task.title}}</h2><a href="{% url 'task_edit' task.list.id task.id%}">- Edit</a></div>
                 <div>
                     {{task.list}} || {{task.deadline}} || {{task.is_starred}} || {{task.is_completed}}
                 </div>
@@ -16,7 +16,9 @@
         </li>
     {% endfor %}
 
-    <li><a href=""> + Create New Task</a></li>
+    <li>
+        <a href="{% url 'task_create' %}"> + Create New Task</a>
+    </li>
 </ul>
 
 {% endblock content %}
