@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<ul>
+    {% for task in task_list %}
+        <li>
+            <div>
+                <div><h2>{{task.title}}</h2><a href="{% url 'task_edit' task.list.id task.id%}">- Edit</a></div>
+                <div>
+                    {{task.list}} || {{task.deadline}} || {% if task.is_starred %} ⭐ || {% endif %} {% if task.is_completed %} ✅ {%else%} ... {% endif %} ||
+                </div>
+                <div>
+                    <a href="{% url 'task_detail' task.list.id task.id %}">View...</a>
+                </div>
+            </div>
+        </li>
+    {% endfor %}
+
+    <li>
+        <a href="{% url 'task_create' list_obj.pk %}"> + Create New Task</a>
+    </li>
+</ul>
+{% if task_list %}
+    <p><a href="{% url 'list_delete' list_obj.pk %}">Delete this list</a></p>
+{% else %}
+    <p>This list is empty and cannot be deleted.</p>
+{% endif %}
+
+{% endblock content %}
