@@ -1,4 +1,5 @@
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
+from django.views import View
 from django.views.generic import ListView, DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
@@ -18,8 +19,13 @@ class TodoListView(ListView):
     context_object_name = 'task_list'
 
     def get_queryset(self):
-        list_obj = List.objects.get(id=self.kwargs['list_id'])
-        return Task.objects.filter(list=list_obj)
+        self.list_obj = List.objects.get(id=self.kwargs['list_id'])
+        return Task.objects.filter(list=self.list_obj).order_by('order')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['list_obj'] = self.list_obj 
+        return context
         
 
 # CRUD Tasks
@@ -29,12 +35,26 @@ class TaskCreateView(CreateView):
     template_name = 'task_form.html'
     form_class = TaskForm
 
+class TaskCreateView(CreateView):
+    model = Task
+    form_class = TaskForm
+    template_name = 'task_form.html'
+
     def form_valid(self, form):
+        list_id = self.kwargs['list_id']
+        list_obj = List.objects.get(id=list_id)
+        
+        # For task list auto
         task = form.save(commit=False)
+        task.list = list_obj
+        
+        # order of the list
         max_order = Task.objects.filter(list=task.list).aggregate(Max('order'))['order__max'] or 0
         task.order = max_order + 1
         task.save()
-        return super().form_valid(form) 
+        
+        return super().form_valid(form)
+
 
     def get_success_url(self):
         return reverse_lazy('todolist', kwargs={'list_id': self.object.list.id})
@@ -67,6 +87,19 @@ class TaskDeleteView(DeleteView):
         return reverse_lazy('todolist', kwargs={'list_id': self.object.list.id})
 
 
+# Toggle
+class TaskToggleView(View):
+    def post(self, request, list_id, task_id):
+        task = get_object_or_404(Task, id=task_id)
+        is_starred = request.POST.get('is_starred') == 'on'
+        is_completed = request.POST.get('is_completed') == 'on'
+
+        task.is_starred = is_starred
+        task.is_completed = is_completed
+        task.save()
+        return redirect('task_detail', list_id=task.list.id, task_id=task.id)
+
+
 class ListCreateView(CreateView):
     model = List
     fields = ['title']
@@ -74,4 +107,12 @@ class ListCreateView(CreateView):
 
     def get_success_url(self):
         return reverse_lazy('home')
+
+class ListDeleteView(DeleteView):
+    model = List
+    template_name = 'list_delete_form.html'
+
+    def get_success_url(self):
+        return reverse_lazy('home')
+
 

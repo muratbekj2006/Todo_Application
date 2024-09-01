@@ -5,21 +5,48 @@
     <h1>{{ object.title }}</h1>
     <h3>{{ object.list }} || 
         {% if object.is_starred %}
-            Starred
-        {% else %}
-            Not Starred
-        {% endif %} || 
+            ⭐      || 
+        {% endif %}
         {% if object.is_completed %}
-            Completed
-        {% else %}
-            Not Completed
+            ✅
         {% endif %}
     </h3>
     <p>Description: {{ object.description }}</p>
     <p>Deadline: {{ object.deadline|date:"F j, Y" }}</p>
 
     <div>
+        <form method="post" action="{% url 'task_toggle' object.list.id object.id %}">
+            {% csrf_token %}
+            <label for="is_starred">
+                <input
+                    type="checkbox"
+                    id="is_starred"
+                    name="is_starred"
+                    {% if object.is_starred %}checked{% endif %} 
+                    onchange="this.form.submit()"
+                >
+                Starred
+            </label>
+            <br>
+            <label for="is_completed">
+                <input 
+                    type="checkbox" 
+                    id="is_completed" 
+                    name="is_completed" 
+                    {% if object.is_completed %}checked{% endif %} 
+                    onchange="this.form.submit()"
+                >
+                Completed
+            </label>
+        </form>
+    </div>
+
+    <div>
         <a href="{% url 'task_delete' task.list.id task.id %}">Delete</a>    
+    </div>
+
+    <div>
+        <a href="{% url 'todolist' object.list.id %}">Back to List</a>
     </div>
 </div>
 {% endblock content %}
